@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ru" class="h-full">
+    <head>
+        {{ include('head.twig') }}
+    </head>
+    <body class="h-full">
+        <div class="mx-auto flex flex-col min-h-screen">
+            {{ app.cmp('navbar')|raw }}
+            <main class="container mb-auto mx-auto px-4">
+                {% block content %}
+                {% endblock %}
+            </main>
+            <footer class="footer footer-center p-4 bg-base-300 text-base-content">
+                <aside>
+                    <p>Copyright © 2024 - All right reserved by ACME Industries Ltd</p>
+                </aside>
+            </footer>
+        </div>
+        <script src="/assets/js/start.js"></script>
+    </body>
+</html>

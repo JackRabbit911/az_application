@@ -1,0 +1,113 @@
+{% macro input(attr) %}
+{% if attr.status is defined and (attr.value or attr.status == 'error') %}
+{% set validate = ' input-' ~ attr.status %}
+{% else %}
+{% set validate = '' %}
+{% endif %}
+{% apply spaceless %}
+    <div class="form-control">
+        <label for="{{ attr.id ?? attr.name }}" class="label">
+            <span class="label-text">{{ attr.label ?? attr.name|capitalize }}</span>
+        </label>
+        <input name="{{ attr.name }}" id="{{ attr.id ?? attr.name }}"
+            type="{{ attr.type ?? attr.name }}" 
+            placeholder="{{ attr.placeholder ?? attr.name|capitalize }}" 
+            class="input input-bordered{{ validate }}"
+            value="{{ attr.value ?? '' }}" 
+            {{ attr.attributes }} />
+        {% if attr.msg is defined and attr.msg is not empty %}
+        <label class="label">
+            <span class="label-text-alt text-error">
+                {{ attr.msg ?? ''}}
+            </span>
+        </label>
+        {% endif %}
+    </div>
+{% endapply %}
+{% endmacro input %}
+
+{% macro file(attr) %}
+{% if attr.status is defined and (attr.value or attr.status == 'error') %}
+{% set validate = ' file-input-' ~ attr.status %}
+{% else %}
+{% set validate = '' %}
+{% endif %}
+{% apply spaceless %}
+    <label class="form-control w-full">
+        <div class="label">
+            <span class="label-text">{{ attr.label }}</span>
+            <span class="label-text-alt">{{ attr.extra.label }}</span>
+        </div>
+        <input type="file" name="{{ attr.name }}" id="{{ attr.id ?? attr.name }}" 
+            class="file-input file-input-bordered w-full{{ validate }}"
+            value="{{ attr.value ?? '' }}" 
+            {{ attr.attributes }} />       
+        <div class="label">
+            {% if attr.msg is defined and attr.msg is not empty %}
+            <span class="label-text-alt text-error">{{ attr.msg ?? ''}}</span>
+            {% endif %}
+        </div>        
+    </label>
+{% endapply %}
+{% endmacro file %}
+
+{% macro checkbox(attr) %}
+{% if attr.status is defined %}
+{% set validate = ' checkbox-' ~ attr.status %}
+{% else %}
+{% set validate = '' %}
+{% endif %}
+
+{% if attr.checked is defined and attr.checked == true %}
+{% set checked = ' checked' %}
+{% else %}
+{% set checked = '' %}
+{% endif %}
+
+{% apply spaceless %}
+    <div class="form-control">
+        <label for="{{ attr.id ?? attr.name }}" class="label">
+            <span class="label-text me-2">{{ attr.label|raw }}</span> 
+            <input name="{{ attr.name }}" id="{{ attr.id ?? attr.name }}" 
+            type="checkbox"{{ checked }} class="checkbox checkbox-sm{{ validate }}" 
+            {% if attr.value is defined and attr.value %}value="{{ attr.value }}" qq{% endif %} 
+            {{ attr.attributes }} />
+        </label>
+        {% if attr.msg is defined and attr.msg is not empty %}
+        <label class="label pt-0">
+            <span class="label-text-alt text-error">
+                {{ attr.msg ?? ''}}
+            </span>
+        </label>
+        {% endif %}
+    </div>
+{% endapply %}
+{% endmacro checkbox %}
+
+{% macro radio(attr, label, value, checked) %}
+{% if checked == 'checked' %}
+{% set checked = ' checked' %}
+{% else %}
+{% set checked = '' %}
+{% endif %}
+
+{% if attr.value is defined %}
+    {% if attr.value == value %}
+        {% set checked = ' checked' %}
+    {% else %}
+        {% set checked = '' %}
+    {% endif %}
+{% endif %}
+
+{% apply spaceless %}
+    <div class="form-control">
+        <label for="{{ attr.id ?? attr.name }}" class="label cursor-pointer">
+            <span class="label-text me-2">{{ label }}</span> 
+            <input name="{{ attr.name }}" id="{{ attr.id ?? attr.name }}" 
+            type="radio"{{ checked }} class="radio radio-sm" 
+            value="{{ value }}"
+            {{ attr.attributes }} />
+        </label>
+    </div>
+{% endapply %}
+{% endmacro radio %}

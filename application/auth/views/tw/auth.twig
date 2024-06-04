@@ -1,0 +1,21 @@
+{% import 'web/macro/formmacro.twig' as m %}
+<form id="{{ form.id }}" method="post" action="{{ form.action }}" accept-charset="UTF-8" enctype="multipart/form-data">
+    {{ csrf()|raw }}
+    {{ m.input(email) }}
+    {{ m.input(password) }}
+
+    <div class="mx-auto flex flex-row justify-between mt-2">
+        {{ m.checkbox(remember) }}
+        <label class="label">
+            <a href="{{ path('restore', {'action': 'showForm'}) }}" class="label-text link link-hover">Forgot password?</a>
+        </label>
+    </div>
+    <div class="form-control mt-2">
+        <button type="submit" class="btn btn-primary">Sign In</button>
+    </div>
+</form>
+
+<p class="mt-5 text-end text-sm">
+    Not a member?
+    <a href="{{ path('register', {'action': 'showForm'}) }}" class="link-hover font-semibold mx-2">Sign Up, please:)</a>
+</p>

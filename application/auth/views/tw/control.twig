@@ -1,0 +1,33 @@
+{% import 'web/macro/menu.twig' as m %}
+<li>
+{% if app.user %}
+    {% set menu = menu|merge({'title': app.user.name}) %}
+
+    <li>
+        <details>
+        {% if app.request.is_active(menu.href, false) %}
+        <summary class="active py-0">
+        {% else %}
+        <summary class="py-0">
+        {% endif %}
+        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+            <div class="w-10 rounded-full">
+                {# {{ app.user.avatar('html') }} #}
+              <img alt="{{ app.user.name }}" src="{{ app.user.avatar }}" />
+            </div>
+        </div>
+        {{ menu.title|raw }}
+        </summary>
+        <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+        {% for subitem in menu.sub %}
+            {{ m.item(subitem) }}
+        {% endfor %}
+        </ul>
+        </details>
+    </li>
+
+{% else %}
+    {% set menu = menu|filter((v,k) => k != 'sub') %}
+    {{ m.menuitem(menu) }}
+{% endif %}
+</li>

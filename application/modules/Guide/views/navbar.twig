@@ -1,0 +1,70 @@
+{% macro menuitem(title, href) %}
+{% if app.request.is_active(href) %}
+{% set class = ' class="whitespace-nowrap active"' %}
+{% else %}
+{% set class = ' class="whitespace-nowrap"' %}
+{% endif %}
+<li><a{{ class|raw }} href="{{ href }}">{{ __(title) }}</a></li>
+{% endmacro %}
+
+<nav class="navbar glass sticky top-0 z-40">
+    <div class="container mx-auto flex flex-row justify-between">       
+        <div class="flex flex-row">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost sm:hidden">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                {% for item in menu %}
+                {% if item.sub is defined %}
+                <li>
+                    <a>{{ item.title }}</a>
+                    <ul>
+                        {% for subitem in item.sub %}
+                        {{ _self.menuitem(subitem.title, path(subitem.route, subitem.params)) }}
+                        {% endfor %}
+                    </ul>
+                </li>
+                {% else %}
+                {{ _self.menuitem(item.title, path(item.route, item.params)) }}
+                {% endif %}
+                {% endfor %}
+                <li class="border-t mt-1 pt-1"><a>Sign In</a></li>
+                </ul>
+            </div>
+            <a class="btn btn-ghost text-xl" href="{{ path('guide') }}">{{ brand }}</a>
+            {% apply spaceless %}
+            <ul class="menu menu-horizontal px-1 hidden sm:flex whitespace-nowrap">
+            {% for item in menu %}
+            {% if item.sub is defined %}
+            <li>
+                <details>
+                {% if app.request.is_active('about', false) %}
+                <summary class="active">
+                {% else %}
+                <summary>
+                {% endif %}
+                    {{ item.title }}
+                </summary>
+                <ul class="p-2">
+                {% for subitem in item.sub %}
+                {{ _self.menuitem(subitem.title, path(subitem.route, subitem.params)) }}
+                {% endfor %}
+                </ul>
+                </details>
+            </li>
+            {% else %}
+            {{ _self.menuitem(item.title, path(item.route, item.params)) }}
+            {% endif %}
+            {% endfor %}
+            </ul>
+            {% endapply %}
+        </div>
+        <div class="flex flex-row">
+            <ul class="menu menu-horizontal px-1 hidden sm:flex">
+                {# {{ _self.menuitem('Sign In', '/auth') }} #}
+                {{ app.cmp('themes')|raw }}
+            </ul>         
+        </div>
+    </div>
+</nav>
